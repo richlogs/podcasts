@@ -61,6 +61,8 @@ if __name__ == "__main__":
         "ZPLAYHEAD AS playhead",
         "ZITEMDESCRIPTIONWITHOUTHTML AS description",
         "ZASSETURL AS asset_url",
+        "ZPODCASTUUID AS podcast_uuid",
+        "ZUUID AS uuid",
     ]
     query = f"""
         SELECT {', '.join(columns)},
