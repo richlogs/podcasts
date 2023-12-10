@@ -25,6 +25,9 @@ def query_database(
         with sqlite3.connect(database_path) as conn:
             df = pd.read_sql_query(query, conn)
         logger.info("Query executed successfully.")
+        logger.info(
+            f"Returned dataframe with {len(df)} rows and {len(df.columns)} columns"
+        )
 
     except Exception as e:
         logger.error(f"Error querying database: {e}")
@@ -50,9 +53,7 @@ def convert_datetime(
     return df
 
 
-if __name__ == "__main__":
-    set_dir()
-
+def build_standard_query() -> str:
     columns = [
         "ZTITLE AS title",
         "ZAUTHOR AS author",
@@ -72,6 +73,14 @@ if __name__ == "__main__":
         WHERE ZASSETURL IS NOT NULL
         ORDER BY ZDOWNLOADDATE DESC
     """
+
+    return query
+
+
+if __name__ == "__main__":
+    set_dir()
+
+    query = build_standard_query()
 
     df_episodes = query_database(query)
     df_episodes = convert_datetime(df_episodes, ["last_played", "download_date"])
