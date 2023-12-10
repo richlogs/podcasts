@@ -54,13 +54,13 @@ if __name__ == "__main__":
     set_dir()
 
     columns = [
-        "ZTITLE",
-        "ZAUTHOR",
-        "ZPODCAST",
-        "ZDURATION",
-        "ZPLAYHEAD",
-        "ZITEMDESCRIPTIONWITHOUTHTML",
-        "ZASSETURL",
+        "ZTITLE AS title",
+        "ZAUTHOR AS author",
+        "ZPODCAST AS podcast",
+        "ZDURATION AS duration",
+        "ZPLAYHEAD AS playhead",
+        "ZITEMDESCRIPTIONWITHOUTHTML AS description",
+        "ZASSETURL AS asset_url",
     ]
     query = f"""
         SELECT {', '.join(columns)},
