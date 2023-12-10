@@ -33,14 +33,45 @@ def query_database(
     return df
 
 
+def convert_datetime(
+    df: pd.DataFrame, columns: list, time_zone: str = "Pacific/Auckland"
+) -> pd.DataFrame:
+    # Converts timezone to nz time.
+    # The inital tz_convert converts time to UTC, why? I don't know.
+    # The second tz_convert converts time to the desired timezone.
+    logger.info(f"Converting {columns=} to {time_zone} time.")
+    for col in columns:
+        df[col] = pd.to_datetime(df[col]).dt.tz_localize("UTC")
+        df[col] = df[col].dt.tz_convert(time_zone)
+        df[col] = pd.to_datetime(df[col]).dt.tz_localize(None)
+        df[col] = pd.to_datetime(df[col]).dt.tz_localize("UTC")
+        df[col] = df[col].dt.tz_convert(time_zone)
+
+    return df
+
+
 if __name__ == "__main__":
     set_dir()
 
-    query = """
-        SELECT *
+    columns = [
+        "ZTITLE",
+        "ZAUTHOR",
+        "ZPODCAST",
+        "ZDURATION",
+        "ZPLAYHEAD",
+        "ZITEMDESCRIPTIONWITHOUTHTML",
+        "ZASSETURL",
+    ]
+    query = f"""
+        SELECT {', '.join(columns)},
+        datetime(ZLASTDATEPLAYED + 978307200, "unixepoch", "utc") AS last_played,
+        datetime(ZDOWNLOADDATE + 978307200, "unixepoch", "utc") AS download_date
         FROM ZMTEPISODE
-        WHERE ZASSETURL IS NOT NLL
+        WHERE ZASSETURL IS NOT NULL
+        ORDER BY ZDOWNLOADDATE DESC
     """
 
-    df = query_database(query)
-    print(df)
+    df_episodes = query_database(query)
+    df_episodes = convert_datetime(df_episodes, ["last_played", "download_date"])
+
+    print(df_episodes)
