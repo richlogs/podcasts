@@ -8,71 +8,39 @@ from podcasts.init.loging import get_logger
 logger = get_logger()
 
 
-def set_dir():
-    logger.info(f"Setting working directory")
-    path = os.path.expanduser(
-        "~/Library/Group Containers/243LU875E5.groups.com.apple.podcasts"
-    )
+def set_dir(
+    directory: str = "~/Library/Group Containers/243LU875E5.groups.com.apple.podcasts",
+):
+    path = os.path.expanduser(directory)
     os.chdir(path)
-    logger.info(f"Set working directory to: {os.getcwd()}")
+    logger.info(f"Working directory set to: {path}")
 
 
-def db_connect(database: str = "Documents/MTLibrary.sqlite"):
-    logger.info(f"Connecting to database: {database}")
-    conn = sqlite3.connect(database)
-    logger.info(f"Connected to database: {database}")
-    return conn
+def query_database(
+    query: str, database: str = "Documents/MTLibrary.sqlite"
+) -> pd.DataFrame:
+    try:
+        database_path = os.path.join(os.getcwd(), database)
+        logger.info(f"Connecting to database: {database_path}")
+        with sqlite3.connect(database_path) as conn:
+            df = pd.read_sql_query(query, conn)
+        logger.info("Query executed successfully.")
 
+    except Exception as e:
+        logger.error(f"Error querying database: {e}")
+        raise e
 
-def db_disconnect(conn):
-    logger.info(f"Disconnecting from database")
-    conn.close()
-    logger.info(f"Disconnected from database")
-
-
-query = """
-SELECT
-	datetime (ep.ZLASTDATEPLAYED + 978307200,
-                "unixepoch",
-                "utc") AS last_played,
-	pod.ZTITLE AS podcast_title,
-	ep.ZTITLE AS episode_title,
-	coalesce(ep.ZWEBPAGEURL,pod.ZWEBPAGEURL) AS webpage_url,
-	pod.ZFEEDURL,
-	ep.ZENCLOSUREURL
-FROM ZMTEPISODE AS ep
-JOIN ZMTPODCAST AS pod ON pod.Z_PK = ep.ZPODCAST
-ORDER BY ep.ZLASTDATEPLAYED ASC
-"""
-
-
-# Assuming you're using SQLite - change accordingly if using another database
+    return df
 
 
 if __name__ == "__main__":
     set_dir()
-    # conn = db_connect()
-    # cursor = conn.cursor()
-    # cursor.execute("SELECT * FROM ZMTPODCAST")
-    # podcasts = cursor.fetchall()
-    # cursor.execute("SELECT * FROM ZMTEPISODE")
-    # print(cursor.fetchall())
-    # conn.close()
 
-    conn = db_connect()
-    cursor = conn.cursor()
+    query = """
+        SELECT *
+        FROM ZMTEPISODE
+        WHERE ZASSETURL IS NOT NLL
+    """
 
-    # Execute the query
-    cursor.execute("SELECT * FROM ZMTEPISODE")
-
-    # Fetch the results
-    rows = cursor.fetchall()
-
-    # Get column names and combine with table name
-    columns = [f"{column[0]}" for column in cursor.description]
-
-    # Create a DataFrame
-    df = pd.DataFrame(rows, columns=columns)
-
-    # Display the DataFrame
+    df = query_database(query)
     print(df)
