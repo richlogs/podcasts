@@ -20,10 +20,3 @@ repos:
       hooks:
       -   id: autoflake
           args: [--remove-all-unused-imports, --in-place]
-  - repo: local
-    hooks:
-    - id: isort
-      name: isort
-      entry: isort
-      language: system
-      types: [python]
