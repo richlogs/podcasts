@@ -77,6 +77,14 @@ def build_standard_query() -> str:
     return query
 
 
+def get_podcast_data() -> pd.DataFrame:
+    set_dir()
+    query = build_standard_query()
+    df = query_database(query)
+    df = convert_datetime(df, ["last_played", "download_date"])
+    return df
+
+
 if __name__ == "__main__":
     set_dir()
 
