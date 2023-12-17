@@ -1,15 +1,28 @@
+import os
+import shutil
 import tkinter as tk
 from tkinter import ttk
 
 import pandas as pd
-from init.loging import get_logger
+
+from podcasts.init.loging import get_logger
 
 logger = get_logger()
 
 
+def move_files(dest_dir, file_paths):
+    for file_path in file_paths:
+        # Get the base name of the file to preserve the original file name
+        base_name = os.path.basename(file_path)
+        # Define the destination file path
+        dest_file_path = os.path.join(dest_dir, base_name)
+        # Move the file
+        shutil.move(file_path, dest_file_path)
+
+
 def select_data(
     df: pd.DataFrame,
-    columns: list[str] = ["title", "author", "duration", "download_date"],
+    columns: list[str] = ["title", "author", "duration", "download_date", "asset_url"],
 ) -> pd.DataFrame:
     return df[columns]
 
@@ -22,9 +35,14 @@ def select_folder():
 
 def get_selected_rows(tree):
     selected_items = tree.selection()
+    final_column_values = []
     for item in selected_items:
         item_data = tree.item(item, "values")
-        print(item_data)  # or do something else with the data
+        if item_data:  # check if item_data is not empty
+            final_column_value = item_data[-1]  # get the last value
+            final_column_values.append(final_column_value)
+    logger.info(f"Selected information: {final_column_values}")
+    return final_column_values
 
 
 def set_tk_style():
@@ -47,3 +65,10 @@ def set_tk_style():
         "Treeview.Heading", background="#565b5e", foreground="white", relief="flat"
     )
     style.map("Treeview.Heading", background=[("active", "#3484F0")])
+
+
+if __name__ == "__main__":
+    from podcasts.utils.sqlite import get_podcast_data
+
+    df = get_podcast_data()
+    print(df.columns)
