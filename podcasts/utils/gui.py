@@ -3,8 +3,6 @@ import shutil
 import tkinter as tk
 from tkinter import ttk
 
-import pandas as pd
-
 from podcasts.init.loging import get_logger
 
 logger = get_logger()
@@ -18,13 +16,6 @@ def move_files(dest_dir, file_paths):
         dest_file_path = os.path.join(dest_dir, base_name)
         # Move the file
         shutil.move(file_path, dest_file_path)
-
-
-def select_data(
-    df: pd.DataFrame,
-    columns: list[str] = ["title", "author", "duration", "download_date", "asset_url"],
-) -> pd.DataFrame:
-    return df[columns]
 
 
 def select_folder():
@@ -71,4 +62,5 @@ if __name__ == "__main__":
     from podcasts.utils.sqlite import get_podcast_data
 
     df = get_podcast_data()
-    print(df.columns)
+    print(df)
+    x = 3
