@@ -6,10 +6,14 @@ import utils.gui as gui
 from init.loging import get_logger
 from utils.sqlite import get_podcast_data
 
+import podcasts.utils.data_processing as data_processing
+
 logger = get_logger()
 
 df = get_podcast_data()
-df = gui.select_data(df)
+df = data_processing.convert_duration(df)
+df = data_processing.add_status(df)
+df = data_processing.select_data(df)
 
 
 customtkinter.set_appearance_mode("dark")
