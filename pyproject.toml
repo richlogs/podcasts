@@ -6,13 +6,15 @@ authors = ["Richlogs <richcostello@outlook.co.nz>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.12"
+python = ">=3.12,<3.13"
 rich-logging = "^0.0.1"
 pre-commit = "^3.6.0"
 pandas = "^2.1.4"
 customtkinter = "^5.2.1"
 packaging = "^23.2"
 ctktable = "^0.9"
+pyinstaller = "^6.3.0"
+auto-py-to-exe = "^2.42.0"
 
 
 [tool.poetry.group.dev.dependencies]
