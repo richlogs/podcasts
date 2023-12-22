@@ -1,5 +1,15 @@
 import customtkinter
 
+import podcasts.utils.dbops as dbops
+import podcasts.utils.data_processing as data_processing
+
+df_podcasts = dbops.get_podcast_data()
+df_podcasts = data_processing.convert_duration(df_podcasts)
+df_podcasts = data_processing.add_status(df_podcasts)
+df_podcasts = data_processing.select_data(df_podcasts)
+
+x = 3
+
 
 class MyCheckboxFrame(customtkinter.CTkFrame):
     def __init__(self, master, title, values):

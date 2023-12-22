@@ -11,9 +11,9 @@ def select_data(
     columns: list[str] = [
         "title",
         "author",
+        "status",
         "duration",
         "download_date",
-        "status",
         "asset_url",
     ],
 ) -> pd.DataFrame:
@@ -54,7 +54,7 @@ def add_status(df: pd.DataFrame) -> pd.DataFrame:
         (df["last_played"].isnull()),
     ]
 
-    values = ["listening", "finished", "unplayed"]
+    values = ["Listening", "Played", "Unplayed"]
 
     # Creating the 'status' column based on the conditions and values
     df["status"] = np.select(conditions, values)
