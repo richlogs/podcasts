@@ -19,23 +19,23 @@ def select_folder(button):
 
 def get_selected_rows(tree):
     selected_items = tree.selection()
-    final_column_values = []
+    final_column_values = {}
     for item in selected_items:
         item_data = tree.item(item, "values")
         if item_data:  # check if item_data is not empty
-            final_column_value = item_data[-1]  # get the last value
-            final_column_values.append(final_column_value)
+            final_column_values[item_data[0]] = item_data[-1]
     logger.info(f"Selected information: {final_column_values}")
     return final_column_values
+
 
 def copy_files(file_urls, target_directory):
     if not os.path.exists(target_directory):
         print(f"aint no dir named {target_directory}")
 
-    for file_url in file_urls:
-        file_path = unquote(file_url.replace('file://', ''))
+    for name, location in file_urls.items():
+        file_path = unquote(location.replace('file://', ''))
         file_name = os.path.basename(file_path)
-        destination = os.path.join(target_directory, file_name)
+        destination = os.path.join(target_directory, f"{name}.mp3")
         shutil.copy(file_path, destination)
         print(f"Moved '{file_name}' to '{target_directory}'")
 
@@ -67,8 +67,9 @@ def set_tk_style():
 
 
 def build_table(master: str, df: pd.DataFrame):
+    height = len(df) if len(df) < 20 else 20
     gui.set_tk_style()
-    tree = ttk.Treeview(master, columns=list(df.columns), show="headings")
+    tree = ttk.Treeview(master, columns=list(df.columns), show="headings", height=height)
     for column in tree["columns"]:
         tree.heading(column, text=column)
 

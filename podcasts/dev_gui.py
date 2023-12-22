@@ -45,7 +45,7 @@ class MyTableFrame(customtkinter.CTkFrame):
     def __init__(self, master, title):
         super().__init__(master)
         self.grid_columnconfigure(0, weight=1)
-        # self.grid_rowconfigure(1, weight=1)
+        self.grid_rowconfigure(1, weight=0)
         self.title = title
 
         self.title = customtkinter.CTkLabel(self, text=self.title, font=customtkinter.CTkFont(size=20, weight="bold"))
@@ -105,6 +105,8 @@ class App(customtkinter.CTk):
 
         self.table = gui.build_table(self.table_frame, df=df_podcasts)
         self.table.grid(row=1, column=0, padx=(10,20), pady=(30,10), sticky='nsew')
+
+
 
         # self.table = CTkTable(master=self.table_frame, values=df_podcasts)
         # self.table.grid()
