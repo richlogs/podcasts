@@ -54,7 +54,7 @@ class MySearchBoxFrame(customtkinter.CTkFrame):
 
         self.search_string.trace_add("write", self.func)
 
-        self.entry = customtkinter.CTkEntry(self, placeholder_text="Search", textvariable=self.search_string)
+        self.entry = customtkinter.CTkEntry(self, textvariable=self.search_string)
         self.entry.grid(row=1, column=0, padx=(4, 4), pady=(10, 0), sticky="ew")
 
 
@@ -110,7 +110,7 @@ class App(customtkinter.CTk):
 
         # add move files button
         self.move_files_button = customtkinter.CTkButton(self.sidebar_frame, text="Move Files", command= lambda: gui.move_files(self.table, self.directory_button.cget("textvariable")))
-        self.move_files_button.grid(row=5, column=0, padx=(10, 10), pady=(30, 0), sticky="ew")
+        self.move_files_button.grid(row=5, column=0, padx=(10, 10), pady=(30, 0), sticky="new")
 
         # create table frame
         self.table_frame = MyTableFrame(self, title="Podcasts")
@@ -133,17 +133,12 @@ class App(customtkinter.CTk):
 
 
     def search_bar_filters(self, *args):
-            print(self.search_box.search_string.get())
-            print(self.table.get_children())
             table_items = self.table.get_children()
             filters = self.search_box.search_string.get()
 
             for item in table_items:
-                print(self.table.item(item)['values'][1])
-                print(filters in self.table.item(item)['values'][1])
 
                 if filters.lower() in self.table.item(item)['values'][1].lower():
-                    print(self.table.item(item)['values'][0])
                     search_var = self.table.item(item)['values']
                     self.table.delete(item)
                     self.table.insert("", 0, values=search_var)
