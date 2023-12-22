@@ -63,7 +63,7 @@ def add_status(df: pd.DataFrame) -> pd.DataFrame:
 
 
 if __name__ == "__main__":
-    from podcasts.utils.sqlite import get_podcast_data
+    from podcasts.utils.dbops import get_podcast_data
 
     df = get_podcast_data()
     df = convert_datetime(df, ["last_played", "download_date"])

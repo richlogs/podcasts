@@ -4,9 +4,9 @@ from tkinter import ttk
 import customtkinter
 import utils.gui as gui
 from init.loging import get_logger
-from utils.sqlite import get_podcast_data
 
 import podcasts.utils.data_processing as data_processing
+from podcasts.utils.dbops import get_podcast_data
 
 logger = get_logger()
 
