@@ -12,8 +12,8 @@ df_podcasts = dbops.get_podcast_data()
 df_podcasts = data_processing.convert_duration(df_podcasts)
 df_podcasts = data_processing.add_status(df_podcasts)
 df_podcasts = data_processing.select_data(df_podcasts)
+df_podcasts = data_processing.format_columns(df_podcasts)
 
-x = 3
 
 
 class MyCheckboxFrame(customtkinter.CTkFrame):

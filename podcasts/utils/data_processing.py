@@ -19,6 +19,9 @@ def select_data(
 ) -> pd.DataFrame:
     return df[columns]
 
+def format_columns(df):
+    df.columns = [' '.join(col.title().split('_')) for col in df.columns]
+    return df
 
 def convert_datetime(
     df: pd.DataFrame, columns: list, time_zone: str = "Pacific/Auckland"
