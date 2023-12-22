@@ -1,7 +1,12 @@
+
 import customtkinter
 
-import podcasts.utils.dbops as dbops
 import podcasts.utils.data_processing as data_processing
+import podcasts.utils.dbops as dbops
+import podcasts.utils.gui as gui
+
+# from CTkTable import CTkTable
+
 
 df_podcasts = dbops.get_podcast_data()
 df_podcasts = data_processing.convert_duration(df_podcasts)
@@ -20,9 +25,7 @@ class MyCheckboxFrame(customtkinter.CTkFrame):
         self.title = title
         self.checkboxes = []
 
-        self.title = customtkinter.CTkLabel(
-            self, text=self.title, fg_color="gray30", corner_radius=6
-        )
+        self.title = customtkinter.CTkLabel(self, text=self.title, fg_color="gray30", corner_radius=6)
         self.title.grid(row=0, column=0, padx=(4, 4), pady=(10, 0), sticky="ew")
 
         for i, value in enumerate(self.values):
@@ -42,11 +45,10 @@ class MyTableFrame(customtkinter.CTkFrame):
     def __init__(self, master, title):
         super().__init__(master)
         self.grid_columnconfigure(0, weight=1)
+        # self.grid_rowconfigure(1, weight=1)
         self.title = title
 
-        self.title = customtkinter.CTkLabel(
-            self, text=self.title, font=customtkinter.CTkFont(size=20, weight="bold")
-        )
+        self.title = customtkinter.CTkLabel(self, text=self.title, font=customtkinter.CTkFont(size=20, weight="bold"))
         self.title.grid(row=0, column=0, padx=(10, 10), pady=(20, 0), sticky="ew")
 
 
@@ -65,7 +67,7 @@ class App(customtkinter.CTk):
         # create sidebar frame
         self.sidebar_frame = customtkinter.CTkFrame(self, width=140, corner_radius=2)
         self.sidebar_frame.grid(row=0, column=0, rowspan=4, sticky="nsew")
-        self.sidebar_frame.grid_rowconfigure(4, weight=1)
+        self.sidebar_frame.grid_rowconfigure(5, weight=1)
 
         # add sidebar label
         self.sidebar_label = customtkinter.CTkLabel(
@@ -81,21 +83,39 @@ class App(customtkinter.CTk):
             title="Play Status",
             values=["Played", "Listening", "Unplayed"],
         )
-        self.playstatus_checkbox.grid(
-            row=1, column=0, padx=(10, 10), pady=(10, 0), sticky="nsew"
-        )
+        self.playstatus_checkbox.grid(row=1, column=0, padx=(10, 10), pady=(10, 0), sticky="nsew")
         self.playstatus_checkbox.configure(fg_color="transparent")
 
-        self.playstatus_button = customtkinter.CTkButton(
-            self.sidebar_frame, text="Apply", command=self.playstatus_filters
-        )
-        self.playstatus_button.grid(
-            row=2, column=0, padx=(10, 10), pady=(10, 0), sticky="ew"
-        )
+        self.playstatus_button = customtkinter.CTkButton(self.sidebar_frame, text="Apply", command=self.playstatus_filters)
+        self.playstatus_button.grid(row=2, column=0, padx=(10, 10), pady=(10, 0), sticky="ew")
+
+        # add directory selector
+        ## self.directory_selection_label = customtkinter.CTkLabel(self.sidebar_frame, text="Folder Selection", fg_color="gray30", corner_radius=6)
+        ## self.directory_selection_label.grid(row=3, column=0, padx=(4, 4), pady=(10, 0), sticky="ew")
+        self.directory_button = customtkinter.CTkButton(self.sidebar_frame, text="Select Folder", command= lambda: gui.select_folder(self.directory_button))
+        self.directory_button.grid(row=3, column=0, padx=(10, 10), pady=(30, 0), sticky="ew")
+
+        # add move files button
+        self.move_files_button = customtkinter.CTkButton(self.sidebar_frame, text="Move Files", command= lambda: gui.move_files(self.table, self.directory_button.cget("textvariable")))
+        self.move_files_button.grid(row=4, column=0, padx=(10, 10), pady=(30, 0), sticky="ew")
 
         # create table frame
         self.table_frame = MyTableFrame(self, title="Podcasts")
         self.table_frame.grid(row=0, column=1, sticky="nsew")
+
+        self.table = gui.build_table(self.table_frame, df=df_podcasts)
+        self.table.grid(row=1, column=0, padx=(10,20), pady=(30,10), sticky='nsew')
+
+        # self.table = CTkTable(master=self.table_frame, values=df_podcasts)
+        # self.table.grid()
+
+
+
+
+
+
+
+
 
     def playstatus_filters(self):
         print(f"Play status filters: {self.playstatus_checkbox.get()}")

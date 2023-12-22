@@ -26,6 +26,20 @@ files = [
 test = ["flake8 (==3.7.8)", "hypothesis (==3.55.3)"]
 
 [[package]]
+name = "ctktable"
+version = "0.9"
+description = "Customtkinter Table widget"
+optional = false
+python-versions = ">=3.6"
+files = [
+    {file = "CTkTable-0.9-py3-none-any.whl", hash = "sha256:c8f6b3f074e1888e00b45aeef08544e739d3cd0e5ee89589bd56f17966f66790"},
+    {file = "CTkTable-0.9.tar.gz", hash = "sha256:26f5ab99a368d1ae134da7e986d0b340e6c68ad535c5e3ab1475916d1111fd8d"},
+]
+
+[package.dependencies]
+customtkinter = "*"
+
+[[package]]
 name = "customtkinter"
 version = "5.2.1"
 description = "Create modern looking GUIs with Python"
@@ -453,4 +467,4 @@ test = ["covdefaults (>=2.3)", "coverage (>=7.2.7)", "coverage-enable-subprocess
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "b3083e7bc92bba37dd216396927114a479bf6c4b9a3e8c29a9e54d20e6ad3b88"
+content-hash = "fbdaa3e7fddb546a1f9e4788fe497f644ad80d8ac1be4f4d174f11f2b7448a85"

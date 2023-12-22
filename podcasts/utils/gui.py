@@ -2,26 +2,19 @@ import os
 import shutil
 import tkinter as tk
 from tkinter import ttk
+from urllib.parse import unquote
 
+import pandas as pd
+
+import podcasts.utils.gui as gui
 from podcasts.init.loging import get_logger
 
 logger = get_logger()
 
-
-def move_files(dest_dir, file_paths):
-    for file_path in file_paths:
-        # Get the base name of the file to preserve the original file name
-        base_name = os.path.basename(file_path)
-        # Define the destination file path
-        dest_file_path = os.path.join(dest_dir, base_name)
-        # Move the file
-        shutil.move(file_path, dest_file_path)
-
-
-def select_folder():
+def select_folder(button):
     folder_path = tk.filedialog.askdirectory(initialdir=os.path.expanduser("~"))
+    button.configure(textvariable=folder_path)
     logger.info(f"Selected Folder Path: {folder_path}")
-    return folder_path
 
 
 def get_selected_rows(tree):
@@ -35,6 +28,21 @@ def get_selected_rows(tree):
     logger.info(f"Selected information: {final_column_values}")
     return final_column_values
 
+def copy_files(file_urls, target_directory):
+    if not os.path.exists(target_directory):
+        print(f"aint no dir named {target_directory}")
+
+    for file_url in file_urls:
+        file_path = unquote(file_url.replace('file://', ''))
+        file_name = os.path.basename(file_path)
+        destination = os.path.join(target_directory, file_name)
+        shutil.copy(file_path, destination)
+        print(f"Moved '{file_name}' to '{target_directory}'")
+
+def move_files(tree, dest_dir):
+    print(dest_dir)
+    files = get_selected_rows(tree)
+    copy_files(files, dest_dir)
 
 def set_tk_style():
     style = ttk.Style()
@@ -58,9 +66,50 @@ def set_tk_style():
     style.map("Treeview.Heading", background=[("active", "#3484F0")])
 
 
-if __name__ == "__main__":
-    from podcasts.utils.dbops import get_podcast_data
+def build_table(master: str, df: pd.DataFrame):
+    gui.set_tk_style()
+    tree = ttk.Treeview(master, columns=list(df.columns), show="headings")
+    for column in tree["columns"]:
+        tree.heading(column, text=column)
 
-    df = get_podcast_data()
-    print(df)
-    x = 3
+    for _, row in df.iterrows():
+        tree.insert("", "end", values=list(row))
+
+    return tree
+
+
+
+
+if __name__ == "__main__":
+    pass
+
+    # df = get_podcast_data()
+    # print(df)
+    # x = 3
+
+    files = ['file:///Users/richardkyle/Library/Group%20Containers/243LU875E5.groups.com.apple.podcasts/Library/Cache/88AEC123-4EF8-4DF4-A39B-E931F3E00F68.mp3',
+     'file:///Users/richardkyle/Library/Group%20Containers/243LU875E5.groups.com.apple.podcasts/Library/Cache/D6A10E8E-0E7F-492D-B60D-D8375E69AD30.mp3',
+     'file:///Users/richardkyle/Library/Group%20Containers/243LU875E5.groups.com.apple.podcasts/Library/Cache/74A89B4C-9004-4446-874F-930C411D31E5.mp3']
+
+
+    def copy_files(file_urls, target_directory):
+    # Ensure the target directory exists, create it if it does not
+        if not os.path.exists(target_directory):
+            print(f"aint no dir named {target_directory}")
+
+        # Iterate through the list of file URLs
+        for file_url in file_urls:
+            # Parse the file URL to get the local file path
+            file_path = unquote(file_url.replace('file://', ''))
+
+            # Extract the file name from the path
+            file_name = os.path.basename(file_path)
+
+            # Define the destination path for the file
+            destination = os.path.join(target_directory, file_name)
+
+            # Move the file to the target directory
+            shutil.copy(file_path, destination)
+            print(f"Moved '{file_name}' to '{target_directory}'")
+
+    move_files(files, '/Users/richardkyle/Desktop/test')
