@@ -58,7 +58,7 @@ class App(customtkinter.CTk):
 
         # configure window
         self.title("Merry Christmas Dad!")
-        self.geometry("400x220")
+        self.geometry("1216x690")
 
         # configure grid layout
         self.grid_columnconfigure((1), weight=1)
@@ -107,21 +107,23 @@ class App(customtkinter.CTk):
         self.table.grid(row=1, column=0, padx=(10,20), pady=(30,10), sticky='nsew')
 
 
-
-        # self.table = CTkTable(master=self.table_frame, values=df_podcasts)
-        # self.table.grid()
-
-
-
-
-
-
-
-
-
     def playstatus_filters(self):
-        print(f"Play status filters: {self.playstatus_checkbox.get()}")
+        table_items = self.table.get_children()
+        filters = self.playstatus_checkbox.get()
 
+        for item in table_items:
+
+            if self.table.item(item)['values'][2] in filters:
+                print(self.table.item(item)['values'][0])
+                search_var = self.table.item(item)['values']
+                self.table.delete(item)
+                self.table.insert("", 0, values=search_var)
+
+
+
+
+def search_tree(tree):
+    print(tree.get_children())
 
 app = App()
 app.mainloop()
