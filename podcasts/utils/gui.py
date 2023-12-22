@@ -19,7 +19,7 @@ def move_files(dest_dir, file_paths):
 
 
 def select_folder():
-    folder_path = tk.filedialog.askdirectory()
+    folder_path = tk.filedialog.askdirectory(initialdir=os.path.expanduser("~"))
     logger.info(f"Selected Folder Path: {folder_path}")
     return folder_path
 
