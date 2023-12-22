@@ -41,6 +41,23 @@ class MyCheckboxFrame(customtkinter.CTkFrame):
         return checked_checkboxes
 
 
+class MySearchBoxFrame(customtkinter.CTkFrame):
+    def __init__(self, master, title):
+        super().__init__(master)
+        self.grid_columnconfigure(0, weight=1)
+        self.title = title
+        self.search_string = customtkinter.StringVar()
+
+        self.title = customtkinter.CTkLabel(self, text=self.title, fg_color="gray30", corner_radius=6)
+        self.title.grid(row=0, column=0, padx=(4, 4), pady=(10, 0), sticky="ew")
+
+        self.entry = customtkinter.CTkEntry(self, placeholder_text="Search")
+        self.entry.grid(row=1, column=0, padx=(4, 4), pady=(10, 0), sticky="ew")
+
+
+
+
+
 class MyTableFrame(customtkinter.CTkFrame):
     def __init__(self, master, title):
         super().__init__(master)
@@ -77,27 +94,32 @@ class App(customtkinter.CTk):
         )
         self.sidebar_label.grid(row=0, column=0, padx=20, pady=(20, 10))
 
+        # add search box
+        self.search_box = MySearchBoxFrame(self.sidebar_frame, title="Author Search")
+        self.search_box.grid(row=1, column=0, padx=(10, 10), pady=(10, 0), sticky="nsew")
+        self.search_box.configure(fg_color="transparent")
+
         # add playstatus checkboxes and button
         self.playstatus_checkbox = MyCheckboxFrame(
             self.sidebar_frame,
             title="Play Status",
             values=["Played", "Listening", "Unplayed"],
         )
-        self.playstatus_checkbox.grid(row=1, column=0, padx=(10, 10), pady=(10, 0), sticky="nsew")
+        self.playstatus_checkbox.grid(row=2, column=0, padx=(10, 10), pady=(10, 0), sticky="nsew")
         self.playstatus_checkbox.configure(fg_color="transparent")
 
         self.playstatus_button = customtkinter.CTkButton(self.sidebar_frame, text="Apply", command=self.playstatus_filters)
-        self.playstatus_button.grid(row=2, column=0, padx=(10, 10), pady=(10, 0), sticky="ew")
+        self.playstatus_button.grid(row=3, column=0, padx=(10, 10), pady=(10, 0), sticky="ew")
 
         # add directory selector
         ## self.directory_selection_label = customtkinter.CTkLabel(self.sidebar_frame, text="Folder Selection", fg_color="gray30", corner_radius=6)
         ## self.directory_selection_label.grid(row=3, column=0, padx=(4, 4), pady=(10, 0), sticky="ew")
         self.directory_button = customtkinter.CTkButton(self.sidebar_frame, text="Select Folder", command= lambda: gui.select_folder(self.directory_button))
-        self.directory_button.grid(row=3, column=0, padx=(10, 10), pady=(30, 0), sticky="ew")
+        self.directory_button.grid(row=4, column=0, padx=(10, 10), pady=(30, 0), sticky="ew")
 
         # add move files button
         self.move_files_button = customtkinter.CTkButton(self.sidebar_frame, text="Move Files", command= lambda: gui.move_files(self.table, self.directory_button.cget("textvariable")))
-        self.move_files_button.grid(row=4, column=0, padx=(10, 10), pady=(30, 0), sticky="ew")
+        self.move_files_button.grid(row=5, column=0, padx=(10, 10), pady=(30, 0), sticky="ew")
 
         # create table frame
         self.table_frame = MyTableFrame(self, title="Podcasts")
