@@ -37,15 +37,14 @@ for _, row in df.iterrows():
 
 tree.pack(expand=True, fill="both")
 
-# Button to get selected rows
-
+# Button to move selected rows to folder
 select_button = tk.Button(
-    frame, text="Get Selected Rows", command=lambda: gui.get_selected_rows(tree)
+    frame, text="Move Selected to Folder", command=lambda: gui.move_files(tree, folder_label.cget("text"))
 )
 select_button.pack()
 
 
-folder_button = tk.Button(frame, text="Select Folder", command=gui.select_folder)
+folder_button = tk.Button(frame, text="Select Folder", command=lambda: folder_label.config(text=gui.select_folder()))
 folder_button.pack()
 
 # Label to display selected folder path

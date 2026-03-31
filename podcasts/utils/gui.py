@@ -11,10 +11,10 @@ from podcasts.init.loging import get_logger
 
 logger = get_logger()
 
-def select_folder(button):
+def select_folder():
     folder_path = tk.filedialog.askdirectory(initialdir=os.path.expanduser("~"))
-    button.configure(textvariable=folder_path)
     logger.info(f"Selected Folder Path: {folder_path}")
+    return folder_path
 
 
 def get_selected_rows(tree):

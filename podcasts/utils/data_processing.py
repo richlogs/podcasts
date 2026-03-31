@@ -60,7 +60,7 @@ def add_status(df: pd.DataFrame) -> pd.DataFrame:
     values = ["Listening", "Played", "Unplayed"]
 
     # Creating the 'status' column based on the conditions and values
-    df["status"] = np.select(conditions, values)
+    df["status"] = np.select(conditions, values, default="Unplayed").astype(str)
 
     return df
 
