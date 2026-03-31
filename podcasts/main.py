@@ -98,6 +98,22 @@ move_button = customtkinter.CTkButton(
 )
 move_button.pack(side="right")
 
+def refresh_table():
+    global df
+    df = get_podcast_data()
+    df = data_processing.convert_duration(df)
+    df = data_processing.add_status(df)
+    df = data_processing.select_data(df)
+    tree.delete(*tree.get_children())
+    for _, row in df.iterrows():
+        tree.insert("", "end", values=list(row))
+    on_selection_change()
+    status_label.configure(text="Refreshed.", text_color="gray")
+
+customtkinter.CTkButton(
+    bottom_frame, text="Refresh", width=80, command=refresh_table
+).pack(side="right", padx=(0, 8))
+
 def _refresh_move_button():
     folder_chosen = folder_path_label.cget("text") != "None selected"
     rows_selected = len(tree.selection()) > 0
